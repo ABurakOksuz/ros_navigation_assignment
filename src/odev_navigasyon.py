@@ -4,27 +4,21 @@ import rospy
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 
-# Hedefe gitme fonksiyonu
 def hedefe_git(x, y):
-    # move_base istemcisini başlatıyoruz
     client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
     client.wait_for_server()
 
-    # Hedef mesajını oluşturuyoruz
     goal = MoveBaseGoal()
     goal.target_pose.header.frame_id = "map"
     goal.target_pose.header.stamp = rospy.Time.now()
 
-    # Koordinatları belirliyoruz
     goal.target_pose.pose.position.x = x
     goal.target_pose.pose.position.y = y
-    # Robotun durduğundaki bakış açısı (Quaternion)
     goal.target_pose.pose.orientation.w = 1.0
 
     rospy.loginfo(f"Hedefe gidiliyor... Koordinatlar: x={x}, y={y}")
     client.send_goal(goal)
     
-    # Sonuç gelene kadar bekle
     wait = client.wait_for_result()
     if not wait:
         rospy.logerr("Hedefe ulaşılamadı!")
@@ -33,11 +27,8 @@ def hedefe_git(x, y):
 
 if __name__ == '__main__':
     try:
-        # ROS düğümünü başlat
         rospy.init_node('odev_5_nokta_node')
         
-        # Buradaki koordinatları RViz'den bakarak kendi haritana göre güncelleyebilirsin
-        # (x, y) şeklinde 5 nokta
         noktalar = [
             (0.5, 0.5),
             (1.0, 0.0),
